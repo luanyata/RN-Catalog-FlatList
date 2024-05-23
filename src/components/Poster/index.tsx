@@ -1,5 +1,7 @@
+import { useNavigation } from '@react-navigation/native';
 import {
-  Image
+  Image,
+  TouchableOpacity
 } from 'react-native';
 import Animated, {
   interpolate,
@@ -15,6 +17,9 @@ type PosterProps = {
 };
 
 export const Poster = ({ index, item, scrollXAnimated, }: PosterProps) => {
+
+  const navigation = useNavigation();
+
   const inputRange = [index - 1, index, index + 1];
   const animatedStyle = useAnimatedStyle(() => {
     const translateX = interpolate(scrollXAnimated.value, inputRange, [50, 0, -100]);
@@ -33,15 +38,24 @@ export const Poster = ({ index, item, scrollXAnimated, }: PosterProps) => {
 
   return (
     <Animated.View style={animatedStyle}>
-      <Image
-        source={{ uri: item.poster }}
-        style={{
-          width: ITEM_WIDTH,
-          height: ITEM_HEIGHT,
-          borderRadius: 14,
-
+      <TouchableOpacity
+        activeOpacity={0.9}
+        onPress={() => {
+          navigation.navigate('EventDetails', { item });
         }}
-      />
+      >
+        <Animated.View sharedTransitionTag='image'>
+          <Image
+            source={{ uri: item.poster }}
+            style={{
+              width: ITEM_WIDTH,
+              height: ITEM_HEIGHT,
+              borderRadius: 14,
+
+            }}
+          />
+        </Animated.View>
+      </TouchableOpacity>
     </Animated.View>
   );
 }
